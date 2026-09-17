@@ -8,20 +8,32 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Extract Android project
+        run: |
+          unzip -o BabuVideo_GitHub_APK_Builder.zip -d extracted
+          cp -r extracted/app .
+          cp extracted/build.gradle .
+          cp extracted/settings.gradle .
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
+
       - name: Build APK
         run: gradle assembleDebug --stacktrace
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
